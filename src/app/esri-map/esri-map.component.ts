@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { EsriLoaderService } from 'angular2-esri-loader';
+import { DonorService } from '../donor.service';
 
 @Component({
   selector: 'app-esri-map',
@@ -13,15 +14,23 @@ export class EsriMapComponent implements OnInit {
 
   private mapView: any;
   private map: any
+  private pins: any
 
   @ViewChild('mapViewNode') private mapViewEl: ElementRef;
 
   constructor(
-    private esriLoader: EsriLoaderService
+    private esriLoader: EsriLoaderService,
+    private donorService: DonorService
   ) { }
 
   public ngOnInit() {
-    if(window.navigator.geolocation) {
+
+    this.donorService.getDonors()
+      .subscribe(pins => {
+        this.pins = pins.json()
+      });
+
+    if (window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
     }
     return this.esriLoader.load({
@@ -48,25 +57,26 @@ export class EsriMapComponent implements OnInit {
         };
 
         this.mapView = new MapView(mapViewProperties);
-        // this.mapView.then(() => this.drawPins())
+        this.mapView.then(() => this.drawPins())
       });
     });
   }
 
   private setPosition(pos) {
+
     this.mapView.center = [pos.coords.longitude, pos.coords.latitude]
     this.mapView.zoom = 15
     return this.mapView.then(() => this.drawPins());
   }
 
   private isPinVisible(pin: Object) {
+
     return true; // TODO
   }
 
   private drawPins() {
-    let pins: Array<any> = [{ position: { latitude: 45.7519344, longitude: 21.2184234 }, name: 'Bruce Wayne', email: 'batman@wayneindustries.com' }]
 
-    let visiblePins = pins.filter(pin => this.isPinVisible(pin))
+    let visiblePins = this.pins.filter(pin => this.isPinVisible(pin))
 
     this.esriLoader.load({
       url: 'https://js.arcgis.com/4.3/'
@@ -81,6 +91,8 @@ export class EsriMapComponent implements OnInit {
 
         visiblePins.forEach(pin => {
 
+          let popupLayout = this.drawPopup(pin);
+
           let point = new SimpleMarkerSymbol({
             size: 10,
             color: "#B30000",
@@ -92,40 +104,35 @@ export class EsriMapComponent implements OnInit {
 
           graphicsArray.push(
             new Graphic({
-              attributes: pin,
+              attributes: { popupLayout },
               symbol: point,
               popupTemplate: new PopupTemplate({
                 title: "Donor",
-                content: [
-                  {
-                    type: "fields",
-                    fieldInfos: [
-                      {
-                        fieldName: "name"
-                      }, {
-                        fieldName: "email"
-                      }
-                    ]
-                  }
-                ]
+                content: "{popupLayout}"
               }),
               geometry: new Point(
                 {
-                  latitude: pin.position.latitude,
-                  longitude: pin.position.longitude
+                  latitude: pin.location.latitude,
+                  longitude: pin.location.longitude
                 }
               )
             })
           );
+
         });
 
         graphicsArray.forEach(g => this.addGraphic(g));
       });
     });
+
   }
 
   private addGraphic(graphic) {
     this.mapView.graphics.add(graphic)
+  }
+
+  private drawPopup(pin) {
+    return JSON.stringify(pin); // TODO
   }
 
 }

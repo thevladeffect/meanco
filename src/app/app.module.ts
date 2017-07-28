@@ -8,6 +8,8 @@ import { EsriMapComponent } from './esri-map/esri-map.component';
 import { EsriLoaderService } from 'angular2-esri-loader';
 import { HeaderComponent } from './header/header.component';
 
+import { DonorService } from './donor.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,8 @@ import { HeaderComponent } from './header/header.component';
     HttpModule
   ],
   providers: [
-    EsriLoaderService
+    EsriLoaderService,
+    DonorService
   ],
   bootstrap: [AppComponent]
 })
