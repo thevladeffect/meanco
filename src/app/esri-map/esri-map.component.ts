@@ -33,6 +33,7 @@ export class EsriMapComponent implements OnInit {
     if (window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
     }
+
     return this.esriLoader.load({
       url: 'https://js.arcgis.com/4.3/'
     }).then(() => {
@@ -57,7 +58,29 @@ export class EsriMapComponent implements OnInit {
         };
 
         this.mapView = new MapView(mapViewProperties);
-        this.mapView.then(() => this.drawPins())
+        this.mapView.then(() => this.drawPins());
+        this.mapView.on('click', (event) => {
+          event.stopPropagation();
+
+          this.mapView.hitTest(event)
+            .then(response => {
+              let lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
+              let lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
+
+              let something;
+              if (response.results[0]) {
+                something = 'graphic';
+              } else {
+                something = 'nothing'
+              }
+
+              this.mapView.popup.open({
+                title: "Reverse geocode: [" + lon + ", " + lat + "]: " + something,
+                location: event.mapPoint,
+                content: "This is a point of interest"
+              });
+            });
+        });
       });
     });
   }
@@ -133,6 +156,10 @@ export class EsriMapComponent implements OnInit {
 
   private drawPopup(pin) {
     return JSON.stringify(pin); // TODO
+  }
+
+  private pointPopup(response) {
+
   }
 
 }
