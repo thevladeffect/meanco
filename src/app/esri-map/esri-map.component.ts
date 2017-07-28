@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-// also import the "angular2-esri-loader" to be able to load JSAPI modules
 import { EsriLoaderService } from 'angular2-esri-loader';
 
 @Component({
@@ -12,10 +11,9 @@ export class EsriMapComponent implements OnInit {
 
   private initialPosition: Array<Number> = [-12.287, -37.114];
 
-  // for JSAPI 4.x you can use the "any for TS types
-  public mapView: any;
+  private mapView: any;
+  private map: any
 
-  // this is needed to be able to create the MapView at the DOM element in this component
   @ViewChild('mapViewNode') private mapViewEl: ElementRef;
 
   constructor(
@@ -26,12 +24,9 @@ export class EsriMapComponent implements OnInit {
     if(window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
     }
-    // only load the ArcGIS API for JavaScript when this component is loaded
     return this.esriLoader.load({
-      // use a specific version of the JSAPI
       url: 'https://js.arcgis.com/4.3/'
     }).then(() => {
-      // load the needed Map and MapView modules from the JSAPI
       this.esriLoader.loadModules([
         'esri/Map',
         'esri/views/MapView'
@@ -43,18 +38,17 @@ export class EsriMapComponent implements OnInit {
           basemap: 'dark-gray-vector'
         };
 
-        const map: any = new Map(mapProperties);
+        this.map = new Map(mapProperties);
 
         const mapViewProperties: any = {
-          // create the map view at the DOM element in this component
           container: this.mapViewEl.nativeElement,
-          // supply additional options
           center: this.initialPosition,
           zoom: 12,
-          map // property shorthand for object literal
+          map: this.map
         };
 
         this.mapView = new MapView(mapViewProperties);
+        // this.mapView.then(() => this.drawPins())
       });
     });
   }
@@ -62,6 +56,76 @@ export class EsriMapComponent implements OnInit {
   private setPosition(pos) {
     this.mapView.center = [pos.coords.longitude, pos.coords.latitude]
     this.mapView.zoom = 15
+    return this.mapView.then(() => this.drawPins());
+  }
+
+  private isPinVisible(pin: Object) {
+    return true; // TODO
+  }
+
+  private drawPins() {
+    let pins: Array<any> = [{ position: { latitude: 45.7519344, longitude: 21.2184234 }, name: 'Bruce Wayne', email: 'batman@wayneindustries.com' }]
+
+    let visiblePins = pins.filter(pin => this.isPinVisible(pin))
+
+    this.esriLoader.load({
+      url: 'https://js.arcgis.com/4.3/'
+    }).then(() => {
+      this.esriLoader.loadModules([
+        'esri/geometry/Point',
+        'esri/symbols/SimpleMarkerSymbol',
+        'esri/Graphic',
+        'esri/PopupTemplate'
+      ]).then(([Point, SimpleMarkerSymbol, Graphic, PopupTemplate]) => {
+        let graphicsArray: Array<Object> = [];
+
+        visiblePins.forEach(pin => {
+
+          let point = new SimpleMarkerSymbol({
+            size: 10,
+            color: "#B30000",
+            outline: {
+              color: [230, 0, 0, 0.4],
+              width: 7
+            }
+          });
+
+          graphicsArray.push(
+            new Graphic({
+              attributes: pin,
+              symbol: point,
+              popupTemplate: new PopupTemplate({
+                title: "Donor",
+                content: [
+                  {
+                    type: "fields",
+                    fieldInfos: [
+                      {
+                        fieldName: "name"
+                      }, {
+                        fieldName: "email"
+                      }
+                    ]
+                  }
+                ]
+              }),
+              geometry: new Point(
+                {
+                  latitude: pin.position.latitude,
+                  longitude: pin.position.longitude
+                }
+              )
+            })
+          );
+        });
+
+        graphicsArray.forEach(g => this.addGraphic(g));
+      });
+    });
+  }
+
+  private addGraphic(graphic) {
+    this.mapView.graphics.add(graphic)
   }
 
 }
