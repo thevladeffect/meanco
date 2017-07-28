@@ -10,6 +10,8 @@ import { EsriLoaderService } from 'angular2-esri-loader';
 })
 export class EsriMapComponent implements OnInit {
 
+  private initialPosition: Array<Number> = [-12.287, -37.114];
+
   // for JSAPI 4.x you can use the "any for TS types
   public mapView: any;
 
@@ -21,6 +23,9 @@ export class EsriMapComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
+    if(window.navigator.geolocation) {
+      window.navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
+    }
     // only load the ArcGIS API for JavaScript when this component is loaded
     return this.esriLoader.load({
       // use a specific version of the JSAPI
@@ -35,7 +40,7 @@ export class EsriMapComponent implements OnInit {
         MapView
       ]) => {
         const mapProperties: any = {
-          basemap: 'hybrid'
+          basemap: 'dark-gray-vector'
         };
 
         const map: any = new Map(mapProperties);
@@ -44,7 +49,7 @@ export class EsriMapComponent implements OnInit {
           // create the map view at the DOM element in this component
           container: this.mapViewEl.nativeElement,
           // supply additional options
-          center: [-12.287, -37.114],
+          center: this.initialPosition,
           zoom: 12,
           map // property shorthand for object literal
         };
@@ -52,6 +57,11 @@ export class EsriMapComponent implements OnInit {
         this.mapView = new MapView(mapViewProperties);
       });
     });
+  }
+
+  private setPosition(pos) {
+    this.mapView.center = [pos.coords.longitude, pos.coords.latitude]
+    this.mapView.zoom = 15
   }
 
 }
