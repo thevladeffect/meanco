@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongoUri = process.env.MONGOLAB_URI || 
-    process.env.MONGOHQ_URL ||
+const mongoUri = process.env.MONGODB_URI || 
     'mongodb://localhost/meanco';
 
 mongoose.connect(mongoUri, (err, res) => {
