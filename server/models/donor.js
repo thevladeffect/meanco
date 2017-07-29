@@ -45,6 +45,10 @@ var DonorSchema = new Schema({
             required: true
         }
     },
+    ipAddress: {
+        type: String,
+        required: true
+    },
     createdAt: Date,
     updatedAt: Date
 });

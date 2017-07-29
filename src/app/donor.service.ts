@@ -17,12 +17,18 @@ export class DonorService {
   ) { }
 
   public getDonors(): Observable<any> {
-     return this.http
-     .get(API_URL + '/donors')
-     .catch(this.handleError);
+    return this.http
+      .get(API_URL + '/donors')
+      .catch(this.handleError);
   }
 
-  private handleError (error: Response | any) {
+  public getDonorById(id: Number): Observable<any> {
+    return this.http
+      .get(API_URL + '/donors/' + id)
+      .catch(this.handleError);
+  }
+
+  private handleError(error: Response | any) {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
   }
