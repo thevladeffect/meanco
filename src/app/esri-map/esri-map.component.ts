@@ -13,8 +13,8 @@ export class EsriMapComponent implements OnInit {
   private initialPosition: Array<Number> = [-12.287, -37.114];
 
   private mapView: any;
-  private map: any
-  private pins: any
+  private map: any;
+  private pins: any;
 
   @ViewChild('mapViewNode') private mapViewEl: ElementRef;
 
@@ -68,17 +68,13 @@ export class EsriMapComponent implements OnInit {
               let lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
 
               let something;
-              if (response.results[0]) {
+              if (response.results.length > 0) {
                 something = 'graphic';
+                let data = response.results[0].graphic.attributes;
+                this.pointPopup(data);
               } else {
                 something = 'nothing'
               }
-
-              this.mapView.popup.open({
-                title: "Reverse geocode: [" + lon + ", " + lat + "]: " + something,
-                location: event.mapPoint,
-                content: "This is a point of interest"
-              });
             });
         });
       });
@@ -92,14 +88,7 @@ export class EsriMapComponent implements OnInit {
     return this.mapView.then(() => this.drawPins());
   }
 
-  private isPinVisible(pin: Object) {
-
-    return true; // TODO
-  }
-
   private drawPins() {
-
-    let visiblePins = this.pins.filter(pin => this.isPinVisible(pin))
 
     this.esriLoader.load({
       url: 'https://js.arcgis.com/4.3/'
@@ -112,9 +101,7 @@ export class EsriMapComponent implements OnInit {
       ]).then(([Point, SimpleMarkerSymbol, Graphic, PopupTemplate]) => {
         let graphicsArray: Array<Object> = [];
 
-        visiblePins.forEach(pin => {
-
-          let popupLayout = this.drawPopup(pin);
+        this.pins.forEach(pin => {
 
           let point = new SimpleMarkerSymbol({
             size: 10,
@@ -127,7 +114,7 @@ export class EsriMapComponent implements OnInit {
 
           graphicsArray.push(
             new Graphic({
-              attributes: { popupLayout },
+              attributes: pin,
               symbol: point,
               popupTemplate: new PopupTemplate({
                 title: "Donor",
@@ -151,15 +138,12 @@ export class EsriMapComponent implements OnInit {
   }
 
   private addGraphic(graphic) {
+
     this.mapView.graphics.add(graphic)
   }
 
-  private drawPopup(pin) {
-    return JSON.stringify(pin); // TODO
+  private pointPopup(data) {
+
+    console.log(data);
   }
-
-  private pointPopup(response) {
-
-  }
-
 }
