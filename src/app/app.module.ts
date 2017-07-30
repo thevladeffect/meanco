@@ -14,7 +14,7 @@ import { HeaderComponent } from './header/header.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { AlertModule } from 'ngx-bootstrap';
 
-import { DonorService } from './donor.service';
+import { DonorService } from './services/donor.service';
 import { DonorManagementComponent } from './donor-management/donor-management.component';
 import { ViewModalComponent } from './view-modal/view-modal.component';
 import { EditModalComponent } from './edit-modal/edit-modal.component';

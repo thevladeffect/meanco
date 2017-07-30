@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, TemplateRef, ViewChild 
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
 
-import { DonorService } from '../donor.service';
+import { DonorService } from '../services/donor.service';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';

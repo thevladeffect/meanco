@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 
 import { EsriLoaderService } from 'angular2-esri-loader';
-import { DonorService } from '../donor.service';
+import { DonorService } from '../services/donor.service';
 
 import { ViewModalComponent } from '../view-modal/view-modal.component'
 import { EditModalComponent } from '../edit-modal/edit-modal.component'
@@ -49,10 +49,6 @@ export class EsriMapComponent implements OnInit {
         this.pins = pins.json()
       });
 
-    if (window.navigator.geolocation) {
-      window.navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
-    }
-
     return this.esriLoader.load({
       url: 'https://js.arcgis.com/4.3/'
     }).then(() => {
@@ -77,6 +73,11 @@ export class EsriMapComponent implements OnInit {
         };
 
         this.mapView = new MapView(mapViewProperties);
+
+        if (window.navigator.geolocation) {
+          window.navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
+        }
+
         this.mapView.on('click', (event) => {
           event.stopPropagation();
 
