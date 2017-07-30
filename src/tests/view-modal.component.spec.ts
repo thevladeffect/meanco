@@ -3,34 +3,34 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { EditModalComponent } from './edit-modal.component';
-import { DonorManagementComponent } from '../donor-management/donor-management.component';
+import { environment } from 'environments/environment';
 
-import { AlertModule } from 'ngx-bootstrap';
+import { ViewModalComponent } from '../app/view-modal/view-modal.component';
+
 import { ModalModule } from 'ngx-bootstrap';
-import { FormsModule } from '@angular/forms';
+import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
 
-describe('EditModalComponent', () => {
-  let component: EditModalComponent;
-  let fixture: ComponentFixture<EditModalComponent>;
+const config: SocketIoConfig = { url: environment.baseUrl, options: {} };
+
+describe('ViewModalComponent', () => {
+  let component: ViewModalComponent;
+  let fixture: ComponentFixture<ViewModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ 
-        EditModalComponent,
-        DonorManagementComponent 
+        ViewModalComponent 
       ],
       imports: [
-        AlertModule.forRoot(),
         ModalModule.forRoot(),
-        FormsModule
+        SocketIoModule.forRoot(config)
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditModalComponent);
+    fixture = TestBed.createComponent(ViewModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

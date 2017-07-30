@@ -3,10 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { EsriMapComponent } from '../esri-map/esri-map.component';
-import { DonorManagementComponent } from './donor-management.component';
-import { ViewModalComponent } from '../view-modal/view-modal.component';
-import { EditModalComponent } from '../edit-modal/edit-modal.component';
+import { EsriMapComponent } from '../app/esri-map/esri-map.component';
+import { DonorManagementComponent } from '../app/donor-management/donor-management.component';
+import { ViewModalComponent } from '../app/view-modal/view-modal.component';
+import { EditModalComponent } from '../app/edit-modal/edit-modal.component';
 
 import { AlertModule } from 'ngx-bootstrap';
 import { ModalModule } from 'ngx-bootstrap';
@@ -18,7 +18,7 @@ import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
 
 import { environment } from 'environments/environment';
 
-import { DonorService } from '../services/donor.service';
+import { DonorService } from '../app/services/donor.service';
 
 const config: SocketIoConfig = { url: environment.baseUrl, options: {} };
 

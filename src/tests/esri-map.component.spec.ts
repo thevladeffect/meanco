@@ -5,10 +5,10 @@ import { DebugElement } from '@angular/core';
 
 import { environment } from 'environments/environment';
 
-import { EsriMapComponent } from './esri-map.component';
-import { ViewModalComponent } from '../view-modal/view-modal.component';
-import { EditModalComponent } from '../edit-modal/edit-modal.component';
-import { DonorManagementComponent } from '../donor-management/donor-management.component';
+import { EsriMapComponent } from '../app/esri-map/esri-map.component';
+import { ViewModalComponent } from '../app/view-modal/view-modal.component';
+import { EditModalComponent } from '../app/edit-modal/edit-modal.component';
+import { DonorManagementComponent } from '../app/donor-management/donor-management.component';
 
 import { AlertModule } from 'ngx-bootstrap';
 import { ModalModule } from 'ngx-bootstrap';
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { EsriLoaderService } from 'angular2-esri-loader';
-import { DonorService } from '../services/donor.service';
+import { DonorService } from '../app/services/donor.service';
 import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
 
 const config: SocketIoConfig = { url: environment.baseUrl, options: {} };

@@ -1,14 +1,14 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { AppComponent } from '../app/app.component';
 
-import { HeaderComponent } from './header/header.component'
+import { HeaderComponent } from '../app/header/header.component'
 import { RouterModule, Routes } from '@angular/router';
-import { EsriMapComponent } from './esri-map/esri-map.component';
-import { DonorManagementComponent } from './donor-management/donor-management.component';
-import { ViewModalComponent } from './view-modal/view-modal.component';
-import { EditModalComponent } from './edit-modal/edit-modal.component';
+import { EsriMapComponent } from '../app/esri-map/esri-map.component';
+import { DonorManagementComponent } from '../app/donor-management/donor-management.component';
+import { ViewModalComponent } from '../app/view-modal/view-modal.component';
+import { EditModalComponent } from '../app/edit-modal/edit-modal.component';
 import { AlertModule } from 'ngx-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { APP_BASE_HREF } from '@angular/common';
