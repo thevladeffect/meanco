@@ -34,7 +34,7 @@ router.post('/donors', (req, res) => {
   let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
   let items = [];
-  if(Array.isArray(req.body)) {
+  if (Array.isArray(req.body)) {
     items = req.body;
   } else {
     items.push(req.body);
@@ -44,26 +44,26 @@ router.post('/donors', (req, res) => {
     item.ipAddress = ip;
   });
 
-  items.forEach(item => new Donor(item).save(err => {
+  items.forEach(item => new Donor(item).save((err, response) => {
     if (err) {
       console.log(`Donor creation failed. ${err}`);
       res.send(err);
     } else {
-      console.log(`Created donor: ${JSON.stringify(item)}`);
-      res.send('ok');
+      console.log(`Created donor: ${JSON.stringify(response)}`);
+      res.send(response);
     }
   }));
 });
 
-router.put('/donors', (req, res) => {
+router.put('/donors/:uid', (req, res) => {
 
   const item = req.body;
 
-  if(Array.isArray(item)) {
+  if (Array.isArray(item)) {
     res.send('Error: Only update a single item at a time.');
   }
 
-  Donor.findOneAndUpdate({ _id: ObjectId(item._id) }, item, (err, updated) => {
+  Donor.findOneAndUpdate({ _id: ObjectId(req.params.uid) }, item, (err, updated) => {
     if (err) {
       console.log(`Error updating: ${err}`);
       res.send(err);
@@ -74,21 +74,15 @@ router.put('/donors', (req, res) => {
   });
 });
 
-router.delete('/donors', (req, res) => {
+router.delete('/donors/:uid', (req, res) => {
 
-  const item = req.body;
-
-  if(Array.isArray(item)) {
-    res.send('Error: Only delete a single item at a time.');
-  }
-
-  Donor.findOneAndRemove({ _id: ObjectId(item._id) }, (err) => {
+  Donor.findOneAndRemove({ _id: ObjectId(req.params.uid) }, (err) => {
     if (err) {
       console.log(`Error removing item: ${err}`);
       res.send(err);
     } else {
-      console.log(`Item removed: ${JSON.stringify(item)}`);
-      res.send('ok');
+      console.log(`Item removed: ${req.params.uid}`);
+      res.send({ _id: req.params.uid });
     }
   });
 });

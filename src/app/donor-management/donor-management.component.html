@@ -1,3 +1,43 @@
-<p>
-  {{ donorString }}
-</p>
+<div class="container">
+  <div *ngFor="let alert of alerts">
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout">{{ alert.msg }}</alert>
+  </div>
+  <form name="donor-form">
+    <div class="form-group">
+      <label for="firstNameInput">First name</label>
+      <input type="text" class="form-control" id="firstNameInput" name="firstName" [(ngModel)]="donor.firstName">
+    </div>
+    <div class="form-group">
+      <label for="lastNameInput">Last name</label>
+      <input type="text" class="form-control" id="lastNameInput" name="lastName" [(ngModel)]="donor.lastName">
+    </div>
+    <div class="form-group">
+      <label for="emailInput">Email address</label>
+      <input type="email" class="form-control" id="emailInput" name="donorEmail" [(ngModel)]="donor.email">
+    </div>
+    <div class="form-group">
+      <label for="contactNumberInput">Contact number</label>
+      <input type="tel" class="form-control" id="contactNumberInput" name="contactNumber" [(ngModel)]="donor.contactNumber">
+    </div>
+    <div class="form-group">
+      <label for="bloodGroupInput">Blood group</label>
+      <input type="text" class="form-control" id="bloodGroupInput" name="bloodType" [(ngModel)]="donor.bloodType">
+    </div>
+    <div class="pull-right">
+      <button class="btn btn-success" (click)="updateDonor()">Submit</button>
+      <button *ngIf="id" class="btn btn-danger" (click)="deleteDonor()">Delete</button>
+    </div>
+  </form>
+  <template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Your unique URL:</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="closeUrlModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      <p>You can use your unique URL to edit or remove your blood donation offer.</p>
+      <a target="_blank" href="{{customUrl}}">{{customUrl}}</a>
+    </div>
+  </template>
+</div>

@@ -1,0 +1,40 @@
+<template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Donor information</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-hover">
+      <tbody>
+        <tr>
+          <td class="col-md-4">First name</td>
+          <td class="col-md-8">{{ data.firstName }}</td>
+        </tr>
+        <tr>
+          <td class="col-md-4">Last name</td>
+          <td class="col-md-8">{{ data.lastName }}</td>
+        </tr>
+        <tr>
+          <td class="col-md-4">Email address</td>
+          <td class="col-md-8">
+            <a class="btn btn-link btn-xs" *ngIf="!showEmail" (click)="showEmail = true">click to show</a>
+            <div *ngIf="showEmail">{{ data.email }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-md-4">Contact number</td>
+          <td class="col-md-8">
+            <a class="btn btn-link btn-xs" *ngIf="!showContact" (click)="showContact = true">click to show</a>
+            <div *ngIf="showContact">{{ data.contactNumber }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-md-4">Blood group</td>
+          <td class="col-md-8">{{ data.bloodType }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>

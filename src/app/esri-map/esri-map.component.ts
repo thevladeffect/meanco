@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 
 import { EsriLoaderService } from 'angular2-esri-loader';
 import { DonorService } from '../donor.service';
+
+import { ViewModalComponent } from '../view-modal/view-modal.component'
+import { EditModalComponent } from '../edit-modal/edit-modal.component'
 
 @Component({
   selector: 'app-esri-map',
@@ -17,6 +20,9 @@ export class EsriMapComponent implements OnInit {
   private pins: any;
 
   @ViewChild('mapViewNode') private mapViewEl: ElementRef;
+  @ViewChild(ViewModalComponent) private viewModalComponent: ViewModalComponent;
+  @ViewChild(EditModalComponent) private editModalComponent: EditModalComponent;
+
 
   constructor(
     private esriLoader: EsriLoaderService,
@@ -67,13 +73,11 @@ export class EsriMapComponent implements OnInit {
               let lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
               let lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
 
-              let something;
               if (response.results.length > 0) {
-                something = 'graphic';
                 let data = response.results[0].graphic.attributes;
                 this.pointPopup(data);
               } else {
-                something = 'nothing'
+                this.mapPopup(lat, lon);
               }
             });
         });
@@ -82,6 +86,8 @@ export class EsriMapComponent implements OnInit {
   }
 
   private setPosition(pos) {
+    
+    if (!pos) pos = this.initialPosition;
 
     this.mapView.center = [pos.coords.longitude, pos.coords.latitude]
     this.mapView.zoom = 15
@@ -144,6 +150,11 @@ export class EsriMapComponent implements OnInit {
 
   private pointPopup(data) {
 
-    console.log(data);
+    this.viewModalComponent.openModal(data);
+  }
+
+  private mapPopup(lat, lon) {
+
+    this.editModalComponent.openModal(lat, lon);
   }
 }

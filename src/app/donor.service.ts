@@ -22,9 +22,27 @@ export class DonorService {
       .catch(this.handleError);
   }
 
-  public getDonorById(id: Number): Observable<any> {
+  public getDonorById(id): Observable<any> {
     return this.http
       .get(API_URL + '/donors/' + id)
+      .catch(this.handleError);
+  }
+
+  public updateDonor(donor): Observable<any> {
+    return this.http
+      .put(API_URL + '/donors/' + donor._id, donor)
+      .catch(this.handleError);
+  }
+
+  public createDonor(donor): Observable<any> {
+    return this.http
+      .post(API_URL + '/donors', donor)
+      .catch(this.handleError);
+  }
+
+  public deleteDonor(id): Observable<any> {
+    return this.http
+      .delete(API_URL + '/donors/' + id)
       .catch(this.handleError);
   }
 

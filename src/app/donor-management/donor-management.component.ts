@@ -1,6 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'environments/environment';
+
 import { DonorService } from '../donor.service';
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+
+const BASE_URL = environment.baseUrl;
 
 @Component({
   selector: 'app-donor-management',
@@ -9,13 +16,26 @@ import { DonorService } from '../donor.service';
 })
 export class DonorManagementComponent implements OnInit {
 
-  private id: Number;
-  private donor: Array<any>;
-  private donorString: String;
+  public modalRef: BsModalRef;
+  @ViewChild('template') tr: TemplateRef<any>
+
+  private id;
+  private donor: any = {};
+
+  public alerts: any = [];
+
+  @Input() latitude: Number;
+  @Input() longitude: Number;
+  @Output() onSuccess = new EventEmitter<boolean>();
+  @Output() onDelete = new EventEmitter<boolean>();
+
+  private customUrl: String;
 
   constructor(
     private route: ActivatedRoute,
-    private donorService: DonorService
+    private router: Router,
+    private donorService: DonorService,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit() {
@@ -24,11 +44,80 @@ export class DonorManagementComponent implements OnInit {
       this.id = params['id'];
     });
 
-    this.donorService.getDonorById(this.id)
+    if (this.id) {
+      this.donorService.getDonorById(this.id)
+        .subscribe(donor => {
+          this.donor = donor.json();
+        });
+    }
+  }
+
+  private updateDonor() {
+    if (this.id) {
+
+      this.donorService.updateDonor(this.donor)
+        .subscribe(res => {
+          if (res.json().name == 'MongoError') {
+            // only check is email uniqueness
+            this.alerts.push({
+              type: 'danger',
+              msg: 'Update failed: Email address already exists',
+              timeout: 3000
+            });
+          } else {
+            this.alerts.push({
+              type: 'success',
+              msg: 'Updated successfully',
+              timeout: 3000
+            });
+          }
+        });
+    } else {
+
+      this.donor.location = {};
+      this.donor.location.latitude = this.latitude;
+      this.donor.location.longitude = this.longitude;
+
+      this.donorService.createDonor(this.donor)
+        .subscribe(res => {
+          let resJson = res.json();
+          if (resJson.name == 'MongoError') {
+            // only check is email uniqueness
+            this.alerts.push({
+              type: 'danger',
+              msg: 'Error: Email address already exists',
+              timeout: 3000
+            });
+          } else {
+            this.alerts.push({
+              type: 'success',
+              msg: 'Created successfully',
+              timeout: 3000
+            });
+            this.customUrl = BASE_URL + "/donor/" + resJson._id;
+            this.modalRef = this.modalService.show(this.tr);
+            this.onSuccess.emit(true);
+          }
+        });
+    }
+  }
+
+  private deleteDonor() {
+    this.donorService.deleteDonor(this.id)
       .subscribe(donor => {
-        this.donor = donor.json();
-        this.donorString = JSON.stringify(this.donor);
+        this.alerts.push({
+          type: 'success',
+          msg: 'Deleted successfully',
+          timeout: 3000
+        });
+        this.onDelete.emit(true);
+        setTimeout(() => {
+          this.router.navigateByUrl('/');
+        }, 1000);
       });
   }
 
+  private closeUrlModal() {
+    this.modalRef.hide();
+  }
 }
