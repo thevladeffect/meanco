@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
+import { APP_BASE_HREF } from '@angular/common';
 
 import { environment } from 'environments/environment';
 
@@ -61,7 +62,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     EsriLoaderService,
-    DonorService
+    DonorService,
+    {provide: APP_BASE_HREF, useValue : '/' }
   ],
   bootstrap: [AppComponent]
 })

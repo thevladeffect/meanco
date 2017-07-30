@@ -3,10 +3,17 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { DonorService } from './donor.service';
 
+import { HttpModule } from '@angular/http';
+
 describe('DonorService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DonorService]
+      providers: [
+        DonorService
+      ],
+      imports: [
+        HttpModule
+      ]
     });
   });
 

@@ -4,6 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { EditModalComponent } from './edit-modal.component';
+import { DonorManagementComponent } from '../donor-management/donor-management.component';
+
+import { AlertModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 describe('EditModalComponent', () => {
   let component: EditModalComponent;
@@ -11,7 +16,15 @@ describe('EditModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditModalComponent ]
+      declarations: [ 
+        EditModalComponent,
+        DonorManagementComponent 
+      ],
+      imports: [
+        AlertModule.forRoot(),
+        ModalModule.forRoot(),
+        FormsModule
+      ]
     })
     .compileComponents();
   }));

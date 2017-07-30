@@ -3,7 +3,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { environment } from 'environments/environment';
+
 import { ViewModalComponent } from './view-modal.component';
+
+import { ModalModule } from 'ngx-bootstrap';
+import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
+
+const config: SocketIoConfig = { url: environment.baseUrl, options: {} };
 
 describe('ViewModalComponent', () => {
   let component: ViewModalComponent;
@@ -11,7 +18,13 @@ describe('ViewModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewModalComponent ]
+      declarations: [ 
+        ViewModalComponent 
+      ],
+      imports: [
+        ModalModule.forRoot(),
+        SocketIoModule.forRoot(config)
+      ]
     })
     .compileComponents();
   }));

@@ -3,7 +3,39 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { EsriMapComponent } from '../esri-map/esri-map.component';
 import { DonorManagementComponent } from './donor-management.component';
+import { ViewModalComponent } from '../view-modal/view-modal.component';
+import { EditModalComponent } from '../edit-modal/edit-modal.component';
+
+import { AlertModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { HttpModule } from '@angular/http';
+import { APP_BASE_HREF } from '@angular/common';
+import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
+
+import { environment } from 'environments/environment';
+
+import { DonorService } from '../services/donor.service';
+
+const config: SocketIoConfig = { url: environment.baseUrl, options: {} };
+
+const appRoutes: Routes = [
+  {
+    path: '',
+    component: EsriMapComponent
+  },
+  {
+    path: 'donor/:id',
+    component: DonorManagementComponent
+  },
+  {
+    path: 'modal',
+    component: ViewModalComponent
+  }
+];
 
 describe('DonorManagementComponent', () => {
   let component: DonorManagementComponent;
@@ -11,9 +43,29 @@ describe('DonorManagementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DonorManagementComponent ]
+      declarations: [
+        DonorManagementComponent,
+        EsriMapComponent,
+        ViewModalComponent,
+        EditModalComponent
+      ],
+      imports: [
+        RouterModule.forRoot(
+          appRoutes,
+          { enableTracing: true }
+        ),
+        AlertModule.forRoot(),
+        ModalModule.forRoot(),
+        FormsModule,
+        HttpModule,
+        SocketIoModule.forRoot(config)
+      ],
+      providers: [
+        { provide: APP_BASE_HREF, useValue: '/' },
+        DonorService
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
