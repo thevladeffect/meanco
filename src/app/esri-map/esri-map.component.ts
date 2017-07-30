@@ -40,8 +40,8 @@ export class EsriMapComponent implements OnInit {
     });
 
     this.socket.on('delete', (item) => {
-      let toBeRemoved = this.graphicsArray.filter(graphic => graphic.attributes._id == item._id)[0];
-      this.removeGraphic(toBeRemoved);
+      let toBeRemoved = this.graphicsArray.filter(graphic => graphic.attributes._id == item._id);
+      toBeRemoved.forEach(item => this.removeGraphic(item));
     });
 
     this.donorService.getDonors()

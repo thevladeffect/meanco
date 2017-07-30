@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
   socket.on('edit', (item) => {
     io.sockets.emit('delete', item);
     io.sockets.emit('drawNew', item);
-    io.sockets.emit('update', item);    
+    io.sockets.emit('update', item);
   });
 });
 
