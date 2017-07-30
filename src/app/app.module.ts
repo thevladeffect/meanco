@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
+import { environment } from 'environments/environment';
+
 import { AppComponent } from './app.component';
 import { EsriMapComponent } from './esri-map/esri-map.component';
 import { EsriLoaderService } from 'angular2-esri-loader';
@@ -16,6 +18,10 @@ import { DonorService } from './donor.service';
 import { DonorManagementComponent } from './donor-management/donor-management.component';
 import { ViewModalComponent } from './view-modal/view-modal.component';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
+
+import { SocketIoModule, SocketIoConfig } from 'ng2-socket-io';
+ 
+const config: SocketIoConfig = { url: environment.baseUrl, options: {} };
 
 const appRoutes: Routes = [
   {
@@ -42,6 +48,7 @@ const appRoutes: Routes = [
     EditModalComponent
   ],
   imports: [
+    SocketIoModule.forRoot(config),
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }

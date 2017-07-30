@@ -7,6 +7,8 @@ import { DonorService } from '../donor.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
+import { Socket } from 'ng2-socket-io';
+
 const BASE_URL = environment.baseUrl;
 
 @Component({
@@ -35,7 +37,8 @@ export class DonorManagementComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private donorService: DonorService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private socket: Socket
   ) { }
 
   ngOnInit() {
@@ -70,6 +73,7 @@ export class DonorManagementComponent implements OnInit {
               msg: 'Updated successfully',
               timeout: 3000
             });
+            this.socket.emit('edit', this.donor);
           }
         });
     } else {
@@ -96,6 +100,7 @@ export class DonorManagementComponent implements OnInit {
             });
             this.customUrl = BASE_URL + "/donor/" + resJson._id;
             this.modalRef = this.modalService.show(this.tr);
+            this.socket.emit('add', resJson);
             this.onSuccess.emit(true);
           }
         });
@@ -110,6 +115,7 @@ export class DonorManagementComponent implements OnInit {
           msg: 'Deleted successfully',
           timeout: 3000
         });
+        this.socket.emit('remove', this.donor);
         this.onDelete.emit(true);
         setTimeout(() => {
           this.router.navigateByUrl('/');

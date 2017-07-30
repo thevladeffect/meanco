@@ -41,12 +41,27 @@ const server = http.createServer(app);
  */
 const io = require('socket.io')(server);
 
-io.on('connection', function(socket){
+io.on('connection', (socket) => {
   console.log('socket.io: a user connected');
-  socket.on('disconnect', function(){
+  socket.on('disconnect', () => {
     console.log('socket.io: user disconnected');
   });
+
+  socket.on('add', (item) => {
+    io.sockets.emit('drawNew', item);
+  });
+
+  socket.on('remove', (item) => {
+    io.sockets.emit('delete', item);
+  });
+
+  socket.on('edit', (item) => {
+    io.sockets.emit('delete', item);
+    io.sockets.emit('drawNew', item);
+    io.sockets.emit('update', item);    
+  });
 });
+
 
 /**
  * Listen on provided port, on all network interfaces.

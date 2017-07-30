@@ -33,6 +33,7 @@
     "esri-loader": "^1.1.0",
     "express": "^4.15.3",
     "mongoose": "^4.11.4",
+    "ng2-socket-io": "^0.1.7",
     "ngx-bootstrap": "^1.8.1",
     "rxjs": "^5.0.1",
     "socket.io": "^2.0.3",
