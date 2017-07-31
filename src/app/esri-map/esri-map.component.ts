@@ -17,7 +17,7 @@ export class EsriMapComponent implements OnInit {
 
   private initialPosition: Array<Number> = [-12.287, -37.114];
 
-  private mapView: any;
+  public mapView: any;
   private map: any;
   private pins: any;
 
@@ -98,7 +98,7 @@ export class EsriMapComponent implements OnInit {
     });
   }
 
-  private setPosition(pos) {
+  public setPosition(pos) {
 
     this.mapView.center = [pos.coords.longitude, pos.coords.latitude]
     this.mapView.zoom = 15
@@ -107,56 +107,50 @@ export class EsriMapComponent implements OnInit {
 
   private drawPins() {
 
-    this.esriLoader.load({
-      url: 'https://js.arcgis.com/4.3/'
-    }).then(() => {
-      this.esriLoader.loadModules([
-        'esri/geometry/Point',
-        'esri/symbols/SimpleMarkerSymbol',
-        'esri/Graphic',
-        'esri/PopupTemplate'
-      ]).then(([Point, SimpleMarkerSymbol, Graphic, PopupTemplate]) => {
+    this.esriLoader.loadModules([
+      'esri/geometry/Point',
+      'esri/symbols/SimpleMarkerSymbol',
+      'esri/Graphic',
+      'esri/PopupTemplate'
+    ]).then(([Point, SimpleMarkerSymbol, Graphic, PopupTemplate]) => {
 
-        this.pins.forEach(pin => {
+      this.pins.forEach(pin => {
 
-          let point = new SimpleMarkerSymbol({
-            size: 10,
-            color: "#B30000",
-            outline: {
-              color: [230, 0, 0, 0.4],
-              width: 7
-            }
-          });
-
-          this.graphicsArray.push(
-            new Graphic({
-              attributes: pin,
-              symbol: point,
-              popupTemplate: new PopupTemplate({
-                title: "Donor",
-                content: "{popupLayout}"
-              }),
-              geometry: new Point(
-                {
-                  latitude: pin.location.latitude,
-                  longitude: pin.location.longitude
-                }
-              )
-            })
-          );
-
+        let point = new SimpleMarkerSymbol({
+          size: 10,
+          color: "#B30000",
+          outline: {
+            color: [230, 0, 0, 0.4],
+            width: 7
+          }
         });
 
-        this.graphicsArray.forEach(g => this.addGraphic(g));
+        this.graphicsArray.push(
+          new Graphic({
+            attributes: pin,
+            symbol: point,
+            popupTemplate: new PopupTemplate({
+              title: "Donor",
+              content: "{popupLayout}"
+            }),
+            geometry: new Point(
+              {
+                latitude: pin.location.latitude,
+                longitude: pin.location.longitude
+              }
+            )
+          })
+        );
+
       });
+
+      this.graphicsArray.forEach(g => this.addGraphic(g));
     });
   }
 
   private drawPin(pin) {
-    this.esriLoader.load({
-      url: 'https://js.arcgis.com/4.3/'
-    }).then(() => {
-      this.esriLoader.loadModules([
+    
+    this.esriLoader.loadModules([
         'esri/geometry/Point',
         'esri/symbols/SimpleMarkerSymbol',
         'esri/Graphic',
@@ -190,7 +184,6 @@ export class EsriMapComponent implements OnInit {
         this.graphicsArray.push(g);
         this.addGraphic(g);
       });
-    });
   }
 
   private addGraphic(graphic) {

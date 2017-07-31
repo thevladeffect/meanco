@@ -24,6 +24,7 @@ const config: SocketIoConfig = { url: environment.baseUrl, options: {} };
 describe('EsriMapComponent', () => {
   let component: EsriMapComponent;
   let fixture: ComponentFixture<EsriMapComponent>;
+  let compiled;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -52,9 +53,32 @@ describe('EsriMapComponent', () => {
     fixture = TestBed.createComponent(EsriMapComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    compiled = fixture.debugElement.nativeElement;
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(compiled.querySelector('app-view-modal')).toBeTruthy();
+    expect(compiled.querySelector('app-edit-modal')).toBeTruthy();
+  });
+
+  it('should have a ViewModalComponent', () => {
+    expect(compiled.querySelector('app-view-modal')).toBeTruthy();
+  });
+
+  it('should have a EditModalComponent', () => {
+    expect(compiled.querySelector('app-edit-modal')).toBeTruthy();
+  });
+
+  it('should set map center and zoom', () => {
+    setTimeout(() => {
+      expect(component.mapView.center).toEqual([-12.287, -37.114]);
+      component.setPosition({ coord: { latitude: 10, longitude: 10 } });
+      expect(component.mapView.center).toEqual([10, 10]);
+    }, 1000);
   });
 });
