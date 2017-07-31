@@ -32,10 +32,6 @@ const appRoutes: Routes = [
   {
     path: 'donor/:id',
     component: DonorManagementComponent
-  },
-  {
-    path: 'modal',
-    component: ViewModalComponent
   }
 ];
 
