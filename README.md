@@ -1,3 +1,4 @@
+![map](http://i.imgur.com/8Am5wjY.png)
 # Project description
 MeanCo is a single page MEAN app to help connect blood donors and patients who need blood. It allows donors to advertise their location, contact info and blood type and patients to see the world map of advertisements. The donor pins on the map are updated live with the help of web sockets so the patients won't miss any change to the listings they might be interesed in.
 
